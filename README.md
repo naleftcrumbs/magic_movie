@@ -2,6 +2,8 @@
 
 A web app that recommends movies from MovieLens data and shows the statistics behind each pick (final project for MATH1220: Mathematical Statistics).
 
+![MovieMagic Homepage](assets/images/homepage.png)
+
 ## How to run
 
 ```bash
