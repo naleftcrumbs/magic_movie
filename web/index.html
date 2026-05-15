@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Magic Movie</title>
+    <link rel="stylesheet" href="https://use.typekit.net/vhu5ywu.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bitcount+Grid+Single:wght@500&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="landing-visible">
+    <div class="app-actions" aria-label="App controls">
+      <button class="theme-switch" id="themeToggle" type="button" aria-label="Switch to dark mode">
+        <span class="theme-icon theme-moon">☾</span>
+        <span class="theme-knob"></span>
+        <span class="theme-icon theme-sun">☀</span>
+      </button>
+      <button class="watchlist-toggle" id="watchlistToggle" type="button" aria-label="Open watchlist">
+        WATCHLIST <span id="watchlistCount">0</span>
+      </button>
+    </div>
+
+    <div class="watchlist-overlay" id="watchlistOverlay" aria-hidden="true">
+      <section class="watchlist-panel" role="dialog" aria-modal="true" aria-labelledby="watchlistTitle">
+        <button class="watchlist-close" id="closeWatchlist" type="button" aria-label="Close watchlist">×</button>
+        <h2 id="watchlistTitle">watchlist</h2>
+        <div class="watchlist-header">
+          <span>Movie</span>
+          <span>Recommended score</span>
+        </div>
+        <div class="watchlist-items" id="watchlistItems"></div>
+        <div class="watchlist-actions">
+          <button class="watchlist-clear" id="clearWatchlist" type="button">Clear watchlist</button>
+        </div>
+      </section>
+    </div>
+
+    <section class="landing" id="landing">
+      <div class="landing-frame" id="dragBounds" aria-label="Magic Movie landing page">
+        <p class="course-note">a final project for<br />MATH1220: Mathematical Statistics</p>
+
+        <img class="landing-art stars stars-top" src="/assets/images/stars.png" alt="" />
+        <img class="landing-art stars stars-bottom" src="/assets/images/stars.png" alt="" />
+        <img class="landing-art films-strip" src="/assets/images/films.png" alt="" />
+
+        <img class="landing-art ticket-title" src="/assets/images/ticket.png" alt="Magic Movie" />
+        <img class="landing-art glasses prop draggable" src="/assets/images/glasses.png" alt="3D glasses" data-draggable />
+        <img class="landing-art popcorn prop draggable" src="/assets/images/popcorn.png" alt="Popcorn" data-draggable />
+        <img class="landing-art clapper prop draggable" src="/assets/images/film-roll.png" alt="Film clapper and reel" data-draggable />
+
+        <button class="quiz-button" id="startQuiz" type="button">take the quiz</button>
+      </div>
+    </section>
+
+    <section class="quiz-shell" id="quizShell" aria-hidden="true">
+      <button class="magic-movie-logo quiz-logo" id="quizLogoHome" type="button" aria-label="Back to Magic Movie landing page">
+        <span>★</span>
+        <strong>MAGIC<br />MOVIE</strong>
+        <span>★</span>
+      </button>
+
+      <div class="quiz-card-area">
+        <button class="card-back-arrow" id="previousQuestion" type="button" aria-label="Previous question">← Back</button>
+        <div class="card-stage" id="cardStage">
+          <div class="card-shadow card-shadow-one"></div>
+          <div class="card-shadow card-shadow-two"></div>
+          <article class="quiz-card" id="quizCard"></article>
+        </div>
+      </div>
+
+      <div class="quiz-nav">
+        <p id="quizProgress"></p>
+        <button class="nav-button" id="nextQuestion" type="button" hidden>next</button>
+        <button class="return-to-results" id="returnToResults" type="button" hidden>Back to recommendations →</button>
+      </div>
+    </section>
+
+    <div class="app-shell" id="appShell" aria-hidden="true">
+      <section class="results-page">
+        <button class="magic-movie-logo results-logo" id="resultsLogoHome" type="button" aria-label="Back to Magic Movie landing page">
+          <span>★</span>
+          <strong>MAGIC<br />MOVIE</strong>
+          <span>★</span>
+        </button>
+        <div class="results-heading">
+          <h1>your recommendations</h1>
+          <p>Flip the card to read the statistical breakdown!</p>
+          <button class="stats-guide-link" id="openStatsGuide" type="button">A guide on how to interpret the statistics.</button>
+        </div>
+        <div class="movie-card-grid" id="movieCardGrid"></div>
+        <button class="back-to-quiz" id="backToQuiz" type="button">← Back to quiz</button>
+
+        <div class="stats-guide-overlay" id="statsGuideOverlay" aria-hidden="true">
+          <section class="stats-guide-panel" role="dialog" aria-modal="true" aria-labelledby="statsGuideTitle">
+            <button class="stats-guide-close" id="closeStatsGuide" type="button" aria-label="Close statistics guide">×</button>
+            <h2 id="statsGuideTitle">how to read the statistics</h2>
+            <div class="guide-grid">
+              <article>
+                <h3>Predicted rating</h3>
+                <p>The app’s prediction for your own rating based on your responses. It combines overall movie quality from MovieLens data, your questionnaire answers, and learned rating patterns across MovieLens users.</p>
+                <p class="formula">rating = bayes movie mean + residual prediction</p>
+              </article>
+              <article>
+                <h3>95% prediction interval</h3>
+                <p>A likely range for your rating if the predicted rating is off. The narrower the interval, the more certain it is :D</p>
+                <p class="formula">rating ± 1.96 × prediction SE</p>
+              </article>
+              <article>
+                <h3>Uncertainty level</h3>
+                <p>This measures how reliable a recommendation is, based on ratings from our MovieLens dataset. If reliability is higher, more users would be likely to agree with it.</p>
+                <p class="formula">0.55 × variance + 0.45 × count uncertainty</p>
+              </article>
+              <article>
+                <h3>Final recommendation score</h3>
+                <p>A ranking metric that accounts for how well you may like the movie, how certain the suggestion is, and whether you prefer rare or widely rated movies.</p>
+                <p class="formula">score = rating - uncertainty penalty + match bonuses</p>
+              </article>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <div class="legacy-dashboard">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Uncertainty-aware movie recommendations</p>
+          <h1>Magic Movie</h1>
+        </div>
+        <div class="summary" id="datasetSummary"></div>
+      </header>
+
+      <main class="layout">
+      <aside class="panel controls">
+        <h2>Preference Input</h2>
+        <label>
+          User
+          <select id="user"></select>
+        </label>
+
+        <fieldset>
+          <legend>Genres</legend>
+          <div class="chips" id="genres"></div>
+        </fieldset>
+
+        <label>
+          Mood
+          <select id="mood">
+            <option value="thoughtful">Thoughtful</option>
+            <option value="fun">Fun</option>
+            <option value="intense">Intense</option>
+            <option value="warm">Warm</option>
+            <option value="curious">Curious</option>
+          </select>
+        </label>
+
+        <label>
+          Confidence preference
+          <input id="confidence" type="range" min="0" max="1" step="0.05" value="0.5" />
+        </label>
+
+        <label>
+          Hidden gem appetite
+          <input id="hiddenGem" type="range" min="0" max="1" step="0.05" value="0.55" />
+        </label>
+
+        <label>
+          Adventurousness
+          <input id="adventure" type="range" min="0" max="1" step="0.05" value="0.45" />
+        </label>
+
+        <div class="segmented" id="mode" hidden>
+          <button data-mode="balanced" class="active">Balanced</button>
+          <button data-mode="safe">Safe</button>
+          <button data-mode="adventurous">Adventurous</button>
+          <button data-mode="hidden_gem">Hidden Gem</button>
+        </div>
+      </aside>
+
+      <section class="workspace">
+        <nav class="tabs">
+          <button class="active" data-tab="recommendations">Recommendations</button>
+          <button data-tab="explanation">Explanation</button>
+          <button data-tab="comparison">Model Comparison</button>
+          <button data-tab="diagnostics">Diagnostics</button>
+        </nav>
+
+        <section id="recommendations" class="tab active">
+          <div class="section-head">
+            <h2>Recommendations</h2>
+            <p>Predicted ratings include baseline user/movie tendencies plus residual regression effects.</p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Movie</th>
+                  <th>Predicted</th>
+                  <th>Naive CI</th>
+                  <th>Bootstrap CI</th>
+                  <th>Decision</th>
+                </tr>
+              </thead>
+              <tbody id="recommendationRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="explanation" class="tab">
+          <div class="section-head">
+            <h2>Statistical Explanation</h2>
+            <p>Coefficient-style contribution table and natural-language uncertainty note for the top pick.</p>
+          </div>
+          <div class="split">
+            <div class="panel">
+              <h3>Contribution Table</h3>
+              <table>
+                <thead><tr><th>Factor</th><th>Effect</th></tr></thead>
+                <tbody id="contributionRows"></tbody>
+              </table>
+            </div>
+            <div class="panel callout">
+              <h3>Explanation Text</h3>
+              <p id="explanationText"></p>
+            </div>
+          </div>
+        </section>
+
+        <section id="comparison" class="tab">
+          <div class="section-head">
+            <h2>Model Comparison Dashboard</h2>
+            <p>OLS, ridge, LASSO, and logistic regression compared by predictive error and information criteria.</p>
+          </div>
+          <div class="split">
+            <canvas id="modelChart" height="260"></canvas>
+            <div class="panel">
+              <h3>Largest OLS Effects</h3>
+              <table>
+                <thead><tr><th>Feature</th><th>Estimate</th><th>p</th></tr></thead>
+                <tbody id="coefficientRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="diagnostics" class="tab">
+          <div class="section-head">
+            <h2>Diagnostics + Assumptions</h2>
+            <p>Residual checks and the IID warning that motivates clustered bootstrap intervals.</p>
+          </div>
+          <div class="split">
+            <canvas id="diagnosticChart" height="260"></canvas>
+            <div class="panel">
+              <h3>Inference Limitations</h3>
+              <ul id="assumptions"></ul>
+            </div>
+          </div>
+        </section>
+      </section>
+      </main>
+      </div>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
