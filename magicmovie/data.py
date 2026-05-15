@@ -1,8 +1,3 @@
-"""Small synthetic MovieLens-style dataset used for demos and tests.
-
-The project is designed so this module can later be replaced by a real
-MovieLens loader without changing the modeling or web layers.
-"""
 
 from __future__ import annotations
 
@@ -120,9 +115,7 @@ def make_demo_dataset(
     random_state: int = 7,
 ) -> DemoDataset:
     """Generate correlated ratings with user/movie structure.
-
-    Ratings from the same user and for the same movie are intentionally
-    correlated. That makes the bootstrap interval comparison meaningful.
+    
     """
 
     rng = np.random.default_rng(random_state)

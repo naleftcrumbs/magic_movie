@@ -1,4 +1,3 @@
-"""Recommendation orchestration and explanation text."""
 
 from __future__ import annotations
 
